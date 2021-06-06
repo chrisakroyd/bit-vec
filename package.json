@@ -9,8 +9,9 @@
     "test": "test"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "coverage": ""
+    "test": "mocha test/*.js",
+    "coverage": "nyc --reporter=lcov mocha --experimental-loader=@istanbuljs/esm-loader-hook",
+    "local-coverage": "nyc mocha test/*.js"
   },
   "repository": {
     "type": "git",
