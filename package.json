@@ -4,6 +4,7 @@
   "description": "",
   "keywords": ["bit", "array", "vector", "map", "set", "bits", "bitvector"],
   "main": "index.js",
+  "type": "module",
   "directories": {
     "example": "examples",
     "test": "test"
