@@ -16,10 +16,12 @@ const bitData = [
   { input: 2 ** 12, expected: 1 },
 ];
 
-describe('countBits(num) tests.', () => {
-  bitData.forEach((test) => {
-    it(`Expect ${test.input} to result in ${test.expected}`, () => {
-      expect(countBits(test.input)).to.equal(test.expected);
+describe('Util tests', () => {
+  describe('countBits(num) tests.', () => {
+    bitData.forEach((test) => {
+      it(`Expect ${test.input} to result in ${test.expected}`, () => {
+        expect(countBits(test.input)).to.equal(test.expected);
+      });
     });
   });
 });

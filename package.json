@@ -2,7 +2,15 @@
   "name": "bit-vec",
   "version": "1.0.0",
   "description": "",
-  "keywords": ["bit", "array", "vector", "map", "set", "bits", "bitvector"],
+  "keywords": [
+    "bit",
+    "array",
+    "vector",
+    "map",
+    "set",
+    "bits",
+    "bitvector"
+  ],
   "main": "index.js",
   "type": "module",
   "directories": {
@@ -24,14 +32,14 @@
     "url": "https://github.com/chrisakroyd/bit-vec/issues"
   },
   "homepage": "https://github.com/chrisakroyd/bit-vec#readme",
-  "dependencies": {},
   "devDependencies": {
     "@istanbuljs/esm-loader-hook": "^0.1.2",
+    "chai": "^4.3.4",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-plugin-import": "^2.23.2",
-    "chai": "^4.3.4",
     "mocha": "^8.3.2",
-    "nyc": "^15.1.0"
+    "nyc": "^15.1.0",
+    "random-seedable": "^1.0.3"
   },
   "files": [
     "LICENSE",
