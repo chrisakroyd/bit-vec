@@ -8,7 +8,14 @@ class BitVector {
     this.length = this.array.length;
   }
 
+  rangeCheck(index) {
+    if (!(index < this.bits) || index < 0) {
+      throw new RangeError();
+    }
+  }
+
   get(index) {
+    this.rangeCheck(index);
     const byteIndex = Math.floor(index / this.bitsPerElement);
     const bitIndex = index % this.bitsPerElement;
 
@@ -16,6 +23,7 @@ class BitVector {
   }
 
   set(index, value = 1) {
+    this.rangeCheck(index);
     const byteIndex = Math.floor(index / this.bitsPerElement);
     const bitIndex = index % this.bitsPerElement;
 
@@ -34,6 +42,7 @@ class BitVector {
   }
 
   flip(index) {
+    this.rangeCheck(index);
     const byteIndex = Math.floor(index / this.bitsPerElement);
     const bitIndex = index % this.bitsPerElement;
     this.array[byteIndex] ^= (1 << bitIndex);
@@ -69,11 +78,11 @@ class BitVector {
     let long;
 
     if (bitVec.length < this.length) {
-      short = bitVec;
+      short = bitVec.array;
       long = this.array;
     } else {
       short = this.array;
-      long = bitVec;
+      long = bitVec.array;
     }
 
     return { short, long };
@@ -143,7 +152,7 @@ class BitVector {
     }
 
     for (let i = 0; i < bitVec.length; i += 1) {
-      if (bitVec[i] !== this.array[i]) {
+      if (bitVec.array[i] !== this.array[i]) {
         return false;
       }
     }
