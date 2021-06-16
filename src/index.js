@@ -10,7 +10,7 @@ class BitVector {
 
   rangeCheck(index) {
     if (!(index < this.bits) || index < 0) {
-      throw new RangeError();
+      throw new RangeError(`Given index ${index} out of range of bit vector length ${this.bits}`);
     }
   }
 
