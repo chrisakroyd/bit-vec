@@ -50,7 +50,7 @@ class BitVector {
   }
 
   test(index) {
-    return !!!this.get(index);
+    return this.get(index) === 1;
   }
 
   count() {
