@@ -43,6 +43,7 @@ describe('BitVector', () => {
 
     it(`Expect basic working on a large vector ${baseSize}`, () => {
       const bitVec = new BitVector(baseSize);
+
       bitVec.set(9);
       expect(bitVec.get(9)).to.equal(1);
       bitVec.set(5, 1);
@@ -71,10 +72,87 @@ describe('BitVector', () => {
       const bitVec = new BitVector(baseSize);
       // Generates a random sample of indices not guaranteed to be unique.
       const indices = random.randRangeArray(numTests, 0, baseSize);
-      indices.forEach((index) => bitVec.set(index));
 
+      indices.forEach((index) => bitVec.set(index));
       indices.forEach((index) => {
         expect(bitVec.get(index)).to.equal(1);
+      });
+    });
+  });
+
+  describe('.clear(index) tests.', () => {
+    const bitVec = new BitVector(baseSize);
+    // Generates a random sample of indices not guaranteed to be unique.
+    const indices = random.randRangeArray(numTests, 0, baseSize);
+    indices.forEach((index) => bitVec.set(index));
+
+    it('Expect the set bits to be cleared.', () => {
+      indices.forEach((index) => {
+        expect(bitVec.get(index)).to.equal(1);
+        bitVec.clear(index);
+        expect(bitVec.get(index)).to.equal(0);
+      });
+    });
+  });
+
+  describe('.flip(index)', () => {
+    const bitVec = new BitVector(baseSize);
+    const indices = random.randRangeArray(numTests, 0, baseSize);
+    const indicesSet = new Set(indices);
+    const nonSet = Array.from({ length: baseSize }, (v, k) => k)
+      .filter((index) => !indicesSet.has(index));
+    const duplicates = indices.reduce((acc, curr, index, arr) => {
+      if (arr.indexOf(curr) !== index && !acc.includes(curr)) acc.push(curr);
+      return acc;
+    }, []);
+
+    indices.forEach((index) => bitVec.set(index));
+
+    it('Expect all set bits to be 1.', () => {
+      indices.forEach((index) => {
+        expect(bitVec.get(index)).to.be.equal(1);
+      });
+    });
+
+    it('Expect all non-set bits to be set to 0.', () => {
+      nonSet.forEach((index) => {
+        expect(bitVec.get(index)).to.be.equal(0);
+      });
+    });
+
+    it('Expect the duplicate indices, once flipped to be set to 0.', () => {
+      duplicates.forEach((index) => {
+        bitVec.flip(index);
+        expect(bitVec.get(index)).to.be.equal(0);
+      });
+    });
+
+    it('Expect the duplicate indices, flipped back to be set to 1.', () => {
+      duplicates.forEach((index) => {
+        bitVec.flip(index);
+        expect(bitVec.get(index)).to.be.equal(1);
+      });
+    });
+  });
+
+  describe('.test(index)', () => {
+    const bitVec = new BitVector(baseSize);
+    const indices = random.randRangeArray(numTests, 0, baseSize);
+    const indicesSet = new Set(indices);
+    const nonSet = Array.from({ length: baseSize }, (v, k) => k)
+      .filter((index) => !indicesSet.has(index));
+
+    indices.forEach((index) => bitVec.set(index));
+
+    it('Expect all set bits to be true when tested.', () => {
+      indices.forEach((index) => {
+        expect(bitVec.test(index)).to.be.true;
+      });
+    });
+
+    it('Expect all non-set bits to be false when tested.', () => {
+      nonSet.forEach((index) => {
+        expect(bitVec.test(index)).to.be.false;
       });
     });
   });
@@ -83,13 +161,192 @@ describe('BitVector', () => {
     const bitVec = new BitVector(baseSize);
     // Generates a random sample of indices not guaranteed to be unique.
     const indices = random.randRangeArray(numTests, 0, baseSize);
-    const indicesSet = new Set();
+    const indicesSet = new Set(indices);
 
-    indices.forEach((index) => {
-      bitVec.set(index);
-      indicesSet.add(index);
+    indices.forEach((index) => bitVec.set(index));
+
+    it(`Expect the count to match the number of unique set indices(${indicesSet.size}).`, () => {
+      expect(bitVec.count()).to.equal(indicesSet.size);
+    });
+  });
+
+  describe('.setRange(begin, end, value)/.clearRange(begin, end) tests.', () => {
+    const bitVec = new BitVector(baseSize);
+
+    it('Expect to correctly set the entire range of bits.', () => {
+      bitVec.setRange(0, 3);
+      for (let i = 0; i < 3; i += 1) {
+        expect(bitVec.get(i)).to.equal(1);
+      }
     });
 
-    expect(bitVec.count()).to.equal(indicesSet.size);
+    it('Expecta range of bits to be cleared.', () => {
+      bitVec.setRange(0, 3);
+      for (let i = 0; i < 3; i += 1) {
+        expect(bitVec.get(i)).to.equal(1);
+      }
+      bitVec.clearRange(0, 3);
+      for (let i = 0; i < 3; i += 1) {
+        expect(bitVec.get(i)).to.equal(0);
+      }
+    });
+  });
+
+  describe('.shortLong(bitVec) tests.', () => {
+    const small = new BitVector(smallSize);
+    const big = new BitVector(baseSize);
+
+    it('Expect the arrays to be correctly based on size (short).', () => {
+      const { short, long } = small.shortLong(big);
+      expect(short).to.deep.equal(small.array);
+      expect(long).to.deep.equal(big.array);
+    });
+
+    it('Expect the arrays to be correctly selected based on size (long).', () => {
+      const { short, long } = big.shortLong(small);
+      expect(short).to.deep.equal(small.array);
+      expect(long).to.deep.equal(big.array);
+    });
+  });
+
+  describe('.equals(bitVec) tests.', () => {
+    it('Expect equals to be false for non-matching bit vectors ', () => {
+      const bitVec1 = new BitVector(smallSize);
+      const bitVec2 = new BitVector(smallSize);
+
+      bitVec1.set(0, 1);
+      bitVec2.set(1, 1);
+      expect(bitVec1.equals(bitVec2)).to.be.false;
+    });
+
+    it('Expect equals to be true for non-matching bit vectors ', () => {
+      const bitVec1 = new BitVector(smallSize);
+      const bitVec2 = new BitVector(smallSize);
+
+      bitVec1.set(1, 1);
+      bitVec2.set(1, 1);
+      expect(bitVec1.equals(bitVec2)).to.be.true;
+    });
+  });
+
+  describe('.or(bitVec)/.orEqual(bitVec) tests.', () => {
+    it('Expect or ', () => {
+      const bitVec1 = new BitVector(smallSize);
+      const bitVec2 = new BitVector(smallSize);
+
+      bitVec1.set(0, 1);
+      bitVec2.set(1, 1);
+      expect(bitVec1.array[0]).to.equal(1);
+      expect(bitVec2.array[0]).to.equal(2);
+      expect(bitVec1.or(bitVec2).array[0]).to.equal(3);
+    });
+
+    it('Expect andEqual', () => {
+      const bitVec1 = new BitVector(smallSize);
+      const bitVec2 = new BitVector(smallSize);
+
+      bitVec1.set(0, 1);
+      bitVec2.set(1, 1);
+      expect(bitVec1.array[0]).to.equal(1);
+      expect(bitVec2.array[0]).to.equal(2);
+      bitVec1.orEqual(bitVec2);
+      expect(bitVec1.array[0]).to.equal(3);
+    });
+  });
+
+  describe('.and(bitVec)/.andEqual(bitVec) tests.', () => {
+    it('Expect and ', () => {
+      const bitVec1 = new BitVector(smallSize);
+      const bitVec2 = new BitVector(smallSize);
+
+      bitVec1.set(0, 1);
+      bitVec2.set(1, 1);
+      expect(bitVec1.array[0]).to.equal(1);
+      expect(bitVec2.array[0]).to.equal(2);
+      expect(bitVec1.and(bitVec2).array[0]).to.equal(0);
+    });
+
+    it('Expect andEqual', () => {
+      const bitVec1 = new BitVector(smallSize);
+      const bitVec2 = new BitVector(smallSize);
+
+      bitVec1.set(0, 1);
+      bitVec2.set(1, 1);
+      expect(bitVec1.array[0]).to.equal(1);
+      expect(bitVec2.array[0]).to.equal(2);
+      bitVec1.andEqual(bitVec2);
+      expect(bitVec1.array[0]).to.equal(0);
+    });
+  });
+
+  describe('.xor(bitVec)/.xorEqual(bitVec) tests.', () => {
+    it('Expect xor ', () => {
+      const bitVec1 = new BitVector(smallSize);
+      const bitVec2 = new BitVector(smallSize);
+
+      bitVec1.set(0, 1);
+      bitVec1.set(1, 1);
+      bitVec2.set(1, 1);
+      expect(bitVec1.array[0]).to.equal(3);
+      expect(bitVec2.array[0]).to.equal(2);
+      expect(bitVec1.xor(bitVec2).array[0]).to.equal(1);
+    });
+
+    it('Expect xorEqual', () => {
+      const bitVec1 = new BitVector(smallSize);
+      const bitVec2 = new BitVector(smallSize);
+
+      bitVec1.set(0, 1);
+      bitVec1.set(1, 1);
+      bitVec2.set(1, 1);
+      expect(bitVec1.array[0]).to.equal(3);
+      expect(bitVec2.array[0]).to.equal(2);
+      bitVec1.xorEqual(bitVec2);
+      expect(bitVec1.array[0]).to.equal(1);
+    });
+  });
+
+  describe('.not()/.notEqual()/.invert() tests.', () => {
+    it('Expect not ', () => {
+      const bitVec = new BitVector(smallSize);
+
+      bitVec.set(0, 1);
+      bitVec.set(1, 1);
+      expect(bitVec.array[0]).to.equal(3);
+      expect(bitVec.not().array[0]).to.equal(252);
+    });
+
+    it('Expect not equal', () => {
+      const bitVec = new BitVector(smallSize);
+
+      bitVec.set(0, 1);
+      bitVec.set(1, 1);
+      expect(bitVec.array[0]).to.equal(3);
+      bitVec.notEqual();
+      expect(bitVec.array[0]).to.equal(252);
+    });
+
+    it('Expect invert', () => {
+      const bitVec1 = new BitVector(smallSize);
+
+      bitVec1.set(0, 1);
+      bitVec1.set(1, 1);
+      expect(bitVec1.array[0]).to.equal(3);
+      bitVec1.invert();
+      expect(bitVec1.array[0]).to.equal(252);
+    });
+  });
+
+  describe('.isEmpty() tests.', () => {
+    const bitVec = new BitVector(smallSize);
+
+    it('Expect unset array to be empty', () => {
+      expect(bitVec.isEmpty()).to.be.true;
+    });
+
+    it('Expect set array to not be empty', () => {
+      bitVec.set(0, 1);
+      expect(bitVec.isEmpty()).to.be.false;
+    });
   });
 });
