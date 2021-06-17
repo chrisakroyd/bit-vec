@@ -55,8 +55,7 @@ class BitVector {
   }
 
   clear(index) {
-    this.set(index, 0);
-    return this;
+    return this.set(index, 0);
   }
 
   flip(index) {

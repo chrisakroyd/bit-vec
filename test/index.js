@@ -180,7 +180,7 @@ describe('BitVector', () => {
       }
     });
 
-    it('Expecta range of bits to be cleared.', () => {
+    it('Expect a range of bits to be cleared.', () => {
       bitVec.setRange(0, 3);
       for (let i = 0; i < 3; i += 1) {
         expect(bitVec.get(i)).to.equal(1);
@@ -227,10 +227,19 @@ describe('BitVector', () => {
       bitVec2.set(1, 1);
       expect(bitVec1.equals(bitVec2)).to.be.true;
     });
+
+    it('Expect equals to be true for matching bit vectors of different lengths.', () => {
+      const bitVec1 = new BitVector(smallSize);
+      const bitVec2 = new BitVector(baseSize);
+
+      bitVec1.set(1, 1);
+      bitVec2.set(1, 1);
+      expect(bitVec1.equals(bitVec2)).to.be.true;
+    });
   });
 
   describe('.or(bitVec)/.orEqual(bitVec) tests.', () => {
-    it('Expect or ', () => {
+    it('Expect or operation to successfully perform for vectors of the same size.', () => {
       const bitVec1 = new BitVector(smallSize);
       const bitVec2 = new BitVector(smallSize);
 
@@ -241,7 +250,16 @@ describe('BitVector', () => {
       expect(bitVec1.or(bitVec2).array[0]).to.equal(3);
     });
 
-    it('Expect andEqual', () => {
+    it('Expect or to perform operation for bit vectors of different lengths.', () => {
+      const bitVec1 = new BitVector(smallSize);
+      const bitVec2 = new BitVector(baseSize);
+
+      bitVec1.set(0, 1);
+      bitVec2.set(1, 1);
+      expect(bitVec1.or(bitVec2).array[0]).to.equal(3);
+    });
+
+    it('Expect orEqual to perform or operation and assign to the existing BitVector.', () => {
       const bitVec1 = new BitVector(smallSize);
       const bitVec2 = new BitVector(smallSize);
 
@@ -255,7 +273,7 @@ describe('BitVector', () => {
   });
 
   describe('.and(bitVec)/.andEqual(bitVec) tests.', () => {
-    it('Expect and ', () => {
+    it('Expect and operation to successfully perform for vectors of the same size.', () => {
       const bitVec1 = new BitVector(smallSize);
       const bitVec2 = new BitVector(smallSize);
 
@@ -266,7 +284,16 @@ describe('BitVector', () => {
       expect(bitVec1.and(bitVec2).array[0]).to.equal(0);
     });
 
-    it('Expect andEqual', () => {
+    it('Expect and to perform operation for bit vectors of different lengths.', () => {
+      const bitVec1 = new BitVector(smallSize);
+      const bitVec2 = new BitVector(baseSize);
+
+      bitVec1.set(0, 1);
+      bitVec2.set(1, 1);
+      expect(bitVec1.and(bitVec2).array[0]).to.equal(0);
+    });
+
+    it('Expect andEqual to perform and operation and assign to the existing BitVector.', () => {
       const bitVec1 = new BitVector(smallSize);
       const bitVec2 = new BitVector(smallSize);
 
@@ -280,7 +307,7 @@ describe('BitVector', () => {
   });
 
   describe('.xor(bitVec)/.xorEqual(bitVec) tests.', () => {
-    it('Expect xor ', () => {
+    it('Expect xor operation to successfully perform for vectors of the same size.', () => {
       const bitVec1 = new BitVector(smallSize);
       const bitVec2 = new BitVector(smallSize);
 
@@ -292,7 +319,17 @@ describe('BitVector', () => {
       expect(bitVec1.xor(bitVec2).array[0]).to.equal(1);
     });
 
-    it('Expect xorEqual', () => {
+    it('Expect xor to perform operation for bit vectors of different lengths.', () => {
+      const bitVec1 = new BitVector(smallSize);
+      const bitVec2 = new BitVector(baseSize);
+
+      bitVec1.set(0, 1);
+      bitVec1.set(1, 1);
+      bitVec2.set(1, 1);
+      expect(bitVec1.xor(bitVec2).array[0]).to.equal(1);
+    });
+
+    it('Expect xorEqual to perform xor operation and assign to the existing BitVector.', () => {
       const bitVec1 = new BitVector(smallSize);
       const bitVec2 = new BitVector(smallSize);
 
@@ -307,7 +344,7 @@ describe('BitVector', () => {
   });
 
   describe('.not()/.notEqual()/.invert() tests.', () => {
-    it('Expect not ', () => {
+    it('Expect not to invert the array.', () => {
       const bitVec = new BitVector(smallSize);
 
       bitVec.set(0, 1);
@@ -316,7 +353,7 @@ describe('BitVector', () => {
       expect(bitVec.not().array[0]).to.equal(252);
     });
 
-    it('Expect not equal', () => {
+    it('Expect notEqual to perform not operation and assign to the existing BitVector.', () => {
       const bitVec = new BitVector(smallSize);
 
       bitVec.set(0, 1);
@@ -326,7 +363,7 @@ describe('BitVector', () => {
       expect(bitVec.array[0]).to.equal(252);
     });
 
-    it('Expect invert', () => {
+    it('Expect invert to perform the same operation as .not().', () => {
       const bitVec1 = new BitVector(smallSize);
 
       bitVec1.set(0, 1);
@@ -347,6 +384,15 @@ describe('BitVector', () => {
     it('Expect set array to not be empty', () => {
       bitVec.set(0, 1);
       expect(bitVec.isEmpty()).to.be.false;
+    });
+  });
+
+  describe('.bitVector() tests.', () => {
+    const bitVec = new BitVector(smallSize);
+
+    it('Expect bitVector to be retrieved.', () => {
+      bitVec.set(0, 1);
+      expect(bitVec.bitVector()[0]).to.equal(1);
     });
   });
 });
