@@ -4,8 +4,26 @@ class BitVector {
   constructor(size) {
     this.array = new Uint8Array(Math.ceil(size / 8));
     this.bitsPerElement = (this.array.BYTES_PER_ELEMENT * 8);
-    this.bits = this.bitsPerElement * this.array.length;
-    this.length = this.array.length;
+  }
+
+  /**
+   *  .bits() + .length() are semi-dynamic properties that may change frequently,
+   *  therefore these are computed on the fly via getters.
+   */
+  get bits() {
+    return this.bitsPerElement * this.array.length;
+  }
+
+  get length() {
+    return this.array.length;
+  }
+
+  get bitVector() {
+    return this.array;
+  }
+
+  set bitVector(bitArray) {
+    this.array = bitArray;
   }
 
   rangeCheck(index) {
@@ -171,27 +189,27 @@ class BitVector {
   }
 
   invert() {
-    this.array = this.not();
+    this.array = this.not().array;
     return this;
   }
 
   orEqual(bitVec) {
-    this.array = this.or(bitVec);
+    this.array = this.or(bitVec).array;
     return this;
   }
 
   xorEqual(bitVec) {
-    this.array = this.xor(bitVec);
+    this.array = this.xor(bitVec).array;
     return this;
   }
 
   andEqual(bitVec) {
-    this.array = this.and(bitVec);
+    this.array = this.and(bitVec).array;
     return this;
   }
 
-  notEqual(bitVec) {
-    this.array = this.not(bitVec);
+  notEqual() {
+    this.array = this.not().array;
     return this;
   }
 
@@ -209,7 +227,9 @@ class BitVector {
   }
 
   static fromArray(bitVec) {
-
+    const newBitVec = new BitVector(0);
+    newBitVec.bitVector = bitVec;
+    return newBitVec;
   }
 }
 
