@@ -392,7 +392,7 @@ describe('BitVector', () => {
 
     it('Expect bitVector to be retrieved.', () => {
       bitVec.set(0, 1);
-      expect(bitVec.bitVector()[0]).to.equal(1);
+      expect(bitVec.bitVector[0]).to.equal(1);
     });
   });
 });
