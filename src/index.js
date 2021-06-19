@@ -162,14 +162,20 @@ class BitVector {
     return BitVector.fromArray(array);
   }
 
-  // TODO: Revist this before publishing, for correctness.
   equals(bitVec) {
-    if (bitVec.length !== this.length) {
-      return false;
+    const { short, long } = this.shortLong(bitVec);
+
+    for (let i = 0; i < short.length; i += 1) {
+      if (short[i] !== long[i]) {
+        return false;
+      }
     }
 
-    for (let i = 0; i < bitVec.length; i += 1) {
-      if (bitVec.array[i] !== this.array[i]) {
+    // If the longer array is all 0 then they are equal, if not then they are not.
+    // equiv to padding shorter bit array to larger array length and comparing.
+    // Allows comparisons along vecs of different length.
+    for (let j = short.length; j < long.length; j += 1) {
+      if (long[j] !== 0) {
         return false;
       }
     }

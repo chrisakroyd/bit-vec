@@ -14,8 +14,9 @@
   "main": "index.js",
   "type": "module",
   "directories": {
-    "example": "examples",
-    "test": "test"
+    "src": "src",
+    "test": "test",
+    "examples": "examples"
   },
   "scripts": {
     "test": "mocha test/*.js",
@@ -26,12 +27,12 @@
     "type": "git",
     "url": "git+https://github.com/chrisakroyd/bit-vec.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Chris Akroyd",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/chrisakroyd/bit-vec/issues"
   },
-  "homepage": "https://github.com/chrisakroyd/bit-vec#readme",
+  "homepage": "https://github.com/chrisakroyd/bit-vec",
   "devDependencies": {
     "@istanbuljs/esm-loader-hook": "^0.1.2",
     "chai": "^4.3.4",
