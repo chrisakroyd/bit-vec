@@ -84,10 +84,10 @@ describe('BitVector', () => {
     const bitVec = new BitVector(baseSize);
     // Generates a random sample of indices not guaranteed to be unique.
     const indices = random.randRangeArray(numTests, 0, baseSize);
-    indices.forEach((index) => bitVec.set(index));
 
     it('Expect the set bits to be cleared.', () => {
       indices.forEach((index) => {
+        bitVec.set(index);
         expect(bitVec.get(index)).to.equal(1);
         bitVec.clear(index);
         expect(bitVec.get(index)).to.equal(0);
