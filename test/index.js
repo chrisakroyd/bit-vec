@@ -85,6 +85,13 @@ describe('BitVector', () => {
     // Generates a random sample of indices not guaranteed to be unique.
     const indices = random.randRangeArray(numTests, 0, baseSize);
 
+    it('Expect single set bit to be cleared.', () => {
+      bitVec.set(0, 1);
+      expect(bitVec.get(0)).to.equal(1);
+      bitVec.clear(0);
+      expect(bitVec.get(0)).to.equal(0);
+    });
+
     it('Expect the set bits to be cleared.', () => {
       indices.forEach((index) => {
         bitVec.set(index);
@@ -209,7 +216,7 @@ describe('BitVector', () => {
     });
   });
 
-  describe('.equals(bitVec) tests.', () => {
+  describe('.equals(bitVec)/.notEquals(bitVec) tests.', () => {
     it('Expect equals to be false for non-matching bit vectors ', () => {
       const bitVec1 = new BitVector(smallSize);
       const bitVec2 = new BitVector(smallSize);
@@ -217,6 +224,15 @@ describe('BitVector', () => {
       bitVec1.set(0, 1);
       bitVec2.set(1, 1);
       expect(bitVec1.equals(bitVec2)).to.be.false;
+    });
+
+    it('Expect not equals to be true for non-matching bit vectors ', () => {
+      const bitVec1 = new BitVector(smallSize);
+      const bitVec2 = new BitVector(smallSize);
+
+      bitVec1.set(0, 1);
+      bitVec2.set(1, 1);
+      expect(bitVec1.notEquals(bitVec2)).to.be.true;
     });
 
     it('Expect equals to be true for non-matching bit vectors ', () => {
@@ -235,6 +251,16 @@ describe('BitVector', () => {
       bitVec1.set(1, 1);
       bitVec2.set(1, 1);
       expect(bitVec1.equals(bitVec2)).to.be.true;
+    });
+
+    it('Expect equals to be false for non-matching bit vectors of different lengths.', () => {
+      const bitVec1 = new BitVector(smallSize);
+      const bitVec2 = new BitVector(baseSize);
+
+      bitVec1.set(1, 1);
+      bitVec2.set(1, 1);
+      bitVec2.set(342, 1);
+      expect(bitVec1.equals(bitVec2)).to.be.false;
     });
   });
 
@@ -393,6 +419,15 @@ describe('BitVector', () => {
     it('Expect bitVector to be retrieved.', () => {
       bitVec.set(0, 1);
       expect(bitVec.bitVector[0]).to.equal(1);
+    });
+  });
+
+  describe('.toArray() tests.', () => {
+    const bitVec = new BitVector(smallSize);
+
+    it('Expect bitVector array to be retrieved and match.', () => {
+      bitVec.set(0, 1);
+      expect(bitVec.toArray()[0]).to.equal(bitVec.array[0]);
     });
   });
 });

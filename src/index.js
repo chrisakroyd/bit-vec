@@ -183,6 +183,10 @@ class BitVector {
     return true;
   }
 
+  notEquals(bitVec) {
+    return !this.equals(bitVec);
+  }
+
   not() {
     const array = new Uint8Array(this.array.length);
 
