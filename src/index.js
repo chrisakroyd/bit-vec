@@ -341,7 +341,7 @@ class BitVector {
    * this BitVector.
    *
    * @param {BitVector} bitVec -> BitVector, instance of BitVector class.
-   * @return {BitVector} Returns `BitVector` for chaining with the bits set.
+   * @return {BitVector} Returns `this` for chaining with the bits set.
    */
   orEqual(bitVec) {
     this.array = this.or(bitVec).array;
@@ -354,7 +354,7 @@ class BitVector {
    * this BitVector.
    *
    * @param {BitVector} bitVec -> BitVector, instance of BitVector class.
-   * @return {BitVector} Returns `BitVector` for chaining with the bits set.
+   * @return {BitVector} Returns `this` for chaining with the bits set.
    */
   xorEqual(bitVec) {
     this.array = this.xor(bitVec).array;
@@ -367,7 +367,7 @@ class BitVector {
    * this BitVector.
    *
    * @param {BitVector} bitVec -> BitVector, instance of BitVector class.
-   * @return {BitVector} Returns `BitVector` for chaining with the bits set.
+   * @return {BitVector} Returns `this` for chaining with the bits set.
    */
   andEqual(bitVec) {
     this.array = this.and(bitVec).array;
@@ -379,7 +379,7 @@ class BitVector {
    * Performs the bitwise not operation between two BitVectors and assigns the result to
    * this BitVector.
    *
-   * @return {BitVector} Returns `BitVector` for chaining with the bits set.
+   * @return {BitVector} Returns `this` for chaining with the bits set.
    */
   notEqual() {
     this.array = this.not().array;

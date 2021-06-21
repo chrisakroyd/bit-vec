@@ -1,10 +1,12 @@
 {
   "name": "bit-vec",
   "version": "1.0.0",
-  "description": "",
+  "description": "Lightweight BitArray implementation written in javascript.",
   "keywords": [
     "bit",
     "array",
+    "bit array",
+    "bit vector",
     "vector",
     "map",
     "set",
