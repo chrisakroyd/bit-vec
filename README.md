@@ -1,6 +1,6 @@
 # bit-vec
 
-[![Coverage Status](https://coveralls.io/repos/github/chrisakroyd/bit-vec/badge.svg?branch=master)](https://coveralls.io/github/chrisakroyd/bit-vec?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/chrisakroyd/bit-vec/badge.svg?branch=main)](https://coveralls.io/github/chrisakroyd/bit-vec?branch=main)
 [![npm version](https://badge.fury.io/js/bit-vec.svg)](https://badge.fury.io/js/bit-vec)
 ![npm](https://img.shields.io/npm/dm/bit-vec)
 
