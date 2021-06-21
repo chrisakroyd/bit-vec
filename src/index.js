@@ -1,6 +1,12 @@
 import { countBits } from './util.js';
 
 class BitVector {
+  /**
+   * BitVector constructor.
+   *
+   * @constructor
+   * @param {Number} size -> Size of the array in bits.
+   */
   constructor(size) {
     this.array = new Uint8Array(Math.ceil(size / 8));
     this.bitsPerElement = (this.array.BYTES_PER_ELEMENT * 8);
@@ -26,12 +32,25 @@ class BitVector {
     this.array = bitArray;
   }
 
+  /**
+   * Clears the bit at the given index.
+   *
+   * @param {Number} index -> Number for index: 0 <= index < bitVec.bits.
+   * @throws {RangeError} Throws range error if index is out of range.
+   */
   rangeCheck(index) {
     if (!(index < this.bits) || index < 0) {
       throw new RangeError(`Given index ${index} out of range of bit vector length ${this.bits}`);
     }
   }
 
+  /**
+   * `bitVec.get(index)`
+   * Performs a get operation on the given index, retrieving the stored value (0 or 1).
+   *
+   * @param {Number} index -> Number for index: 0 <= index < bitVec.bits.
+   * @return {Number} Returns number, 1 if set, 0 otherwise.
+   */
   get(index) {
     this.rangeCheck(index);
     const byteIndex = Math.floor(index / this.bitsPerElement);
@@ -40,6 +59,14 @@ class BitVector {
     return (this.array[byteIndex] & (1 << bitIndex)) > 0 ? 1 : 0;
   }
 
+  /**
+   * `bitVec.set(index)`
+   * Performs a set operation on the given index, setting the value to either 0 or 1.
+   *
+   * @param {Number} index -> Number for index: 0 <= index < bitVec.bits.
+   * @param {Number} value -> Number, 0 or 1, defaults to 1.
+   * @return {BitVector} Returns `BitVector` for chaining with the bit cleared.
+   */
   set(index, value = 1) {
     this.rangeCheck(index);
     const byteIndex = Math.floor(index / this.bitsPerElement);
@@ -54,10 +81,24 @@ class BitVector {
     return this;
   }
 
+  /**
+   * `bitVec.clear(index)`
+   * Clears the bit at the given index.
+   *
+   * @param {Number} index -> Number for index: 0 <= index < bitVec.bits.
+   * @return {BitVector} Returns `BitVector` for chaining with the bit cleared.
+   */
   clear(index) {
     return this.set(index, 0);
   }
 
+  /**
+   * `bitVec.flip(index)`
+   * Flips the bit at the given index.
+   *
+   * @param {Number} index -> Number for index: 0 <= index < bitVec.bits.
+   * @return {BitVector} Returns `BitVector` for chaining with the bit cleared.
+   */
   flip(index) {
     this.rangeCheck(index);
     const byteIndex = Math.floor(index / this.bitsPerElement);
@@ -66,10 +107,23 @@ class BitVector {
     return this;
   }
 
+  /**
+   * `bitVec.test(index)`
+   * Tests whether the given index is set to 1.
+   *
+   * @param {Number} index -> Number for index: 0 <= index < bitVec.bits.
+   * @return {Boolean} Returns Boolean `true` if index is set, `false` otherwise .
+   */
   test(index) {
     return this.get(index) === 1;
   }
 
+  /**
+   * `bitVec.count()`
+   * Counts the number of set bits in the bit vector.
+   *
+   * @return {Number} Number of indices currently set to 1.
+   */
   count() {
     let c = 0;
     for (let i = 0; i < this.array.length; i += 1) {
@@ -78,6 +132,15 @@ class BitVector {
     return c;
   }
 
+  /**
+   * `bitVec.setRange(begin, end, value = 1)`
+   * Sets a range of bits from begin to end.
+   *
+   * @param {Number} begin -> Number for index: 0 <= index < bitVec.bits.
+   * @param {Number} end -> Number for index: 0 <= index < bitVec.bits.
+   * @param {Number} value -> The value to set the index to (0 or 1).
+   * @return {BitVector} Returns `BitVector` for chaining with the bits set.
+   */
   setRange(begin, end, value = 1) {
     for (let i = begin; i < end; i += 1) {
       this.set(i, value);
@@ -85,11 +148,28 @@ class BitVector {
     return this;
   }
 
+  /**
+   * `bitVec.clearRange(begin, end)`
+   * Clears a range of bits from begin to end.
+   *
+   * @param {Number} begin -> Number for index: 0 <= index < bitVec.bits.
+   * @param {Number} end -> Number for index: 0 <= index < bitVec.bits.
+   * @return {BitVector} Returns `BitVector` for chaining with the bits set.
+   */
   clearRange(begin, end) {
     this.setRange(begin, end, 0);
     return this;
   }
 
+  /**
+   * `bitVec.shortLong(bitVec)`
+   *  Useful function allowing for the comparison of two differently sized BitVector's.
+   *  Simply returns the short and long arrays.
+   *
+   * @param {BitVector} bitVec -> BitVector, instance of BitVector class.
+   * @return {Object} Returns object with two keys of type `BitVector`,
+   *                  short = shorter bit vector, long = longer bit vector.
+   */
   shortLong(bitVec) {
     let short;
     let long;
@@ -105,6 +185,14 @@ class BitVector {
     return { short, long };
   }
 
+  /**
+   * `bitVec.or(bitVec)`
+   * Performs the bitwise or operation between two BitVectors and returns the result as a
+   * new BitVector object.
+   *
+   * @param {BitVector} bitVec -> BitVector, instance of BitVector class.
+   * @return {BitVector} Returns new `BitVector` object with the result of the operation.
+   */
   or(bitVec) {
     // Get short and long arrays, assign correct variables -> for ops between two diff sized arrays.
     const { short, long } = this.shortLong(bitVec);
@@ -124,6 +212,14 @@ class BitVector {
     return BitVector.fromArray(array);
   }
 
+  /**
+   * `bitVec.xor(bitVec)`
+   * Performs the bitwise xor operation between two BitVectors and returns the result as a
+   * new BitVector object.
+   *
+   * @param {BitVector} bitVec -> BitVector, instance of BitVector class.
+   * @return {BitVector} Returns new `BitVector` object with the result of the operation.
+   */
   xor(bitVec) {
     // Get short and long arrays, assign correct variables -> for ops between two diff sized arrays.
     const { short, long } = this.shortLong(bitVec);
@@ -143,6 +239,14 @@ class BitVector {
     return BitVector.fromArray(array);
   }
 
+  /**
+   * `bitVec.and(bitVec)`
+   * Performs the bitwise and operation between two BitVectors and returns the result as a
+   * new BitVector object.
+   *
+   * @param {BitVector} bitVec -> BitVector, instance of BitVector class.
+   * @return {BitVector} Returns new `BitVector` object with the result of the operation.
+   */
   and(bitVec) {
     // Get short and long arrays, assign correct variables -> for ops between two diff sized arrays.
     const { short, long } = this.shortLong(bitVec);
@@ -162,6 +266,13 @@ class BitVector {
     return BitVector.fromArray(array);
   }
 
+  /**
+   * `bitVec.equals(otherBitVec)`
+   * Determines if two bit vectors are equal.
+   *
+   * @param {BitVector} bitVec -> BitVector, instance of BitVector class.
+   * @return {Boolean} Returns Boolean `true` if the two bit vectors are equal, `false` otherwise.
+   */
   equals(bitVec) {
     const { short, long } = this.shortLong(bitVec);
 
@@ -183,10 +294,25 @@ class BitVector {
     return true;
   }
 
+  /**
+   * `bitVec.notEquals(otherBitVec)`
+   * Determines if two bit vectors are not equal.
+   *
+   * @param {BitVector} bitVec -> BitVector, instance of BitVector class.
+   * @return {Boolean} Returns Boolean `true` if the two bit vectors are not equal,
+   *                   `false` otherwise.
+   */
   notEquals(bitVec) {
     return !this.equals(bitVec);
   }
 
+  /**
+   * `bitVec.not()`
+   * Performs the bitwise not operation on this BitVector and returns the result as a
+   * new BitVector object.
+   *
+   * @return {BitVector} Returns new `BitVector` object with the result of the operation.
+   */
   not() {
     const array = new Uint8Array(this.array.length);
 
@@ -197,31 +323,75 @@ class BitVector {
     return BitVector.fromArray(array);
   }
 
+  /**
+   * `bitVec.invert()`
+   *
+   * Inverts this BitVector, alias of .not().
+   *
+   * @return {BitVector} Returns new `BitVector` object with the result of the operation.
+   */
   invert() {
     this.array = this.not().array;
     return this;
   }
 
+  /**
+   * `bitVec.orEqual(bitVec)`
+   * Performs the bitwise or operation between two BitVectors and assigns the result to
+   * this BitVector.
+   *
+   * @param {BitVector} bitVec -> BitVector, instance of BitVector class.
+   * @return {BitVector} Returns `BitVector` for chaining with the bits set.
+   */
   orEqual(bitVec) {
     this.array = this.or(bitVec).array;
     return this;
   }
 
+  /**
+   * `bitVec.xorEqual(bitVec)`
+   * Performs the bitwise xor operation between two BitVectors and assigns the result to
+   * this BitVector.
+   *
+   * @param {BitVector} bitVec -> BitVector, instance of BitVector class.
+   * @return {BitVector} Returns `BitVector` for chaining with the bits set.
+   */
   xorEqual(bitVec) {
     this.array = this.xor(bitVec).array;
     return this;
   }
 
+  /**
+   * `bitVec.andEqual(bitVec)`
+   * Performs the bitwise and operation between two BitVectors and assigns the result to
+   * this BitVector.
+   *
+   * @param {BitVector} bitVec -> BitVector, instance of BitVector class.
+   * @return {BitVector} Returns `BitVector` for chaining with the bits set.
+   */
   andEqual(bitVec) {
     this.array = this.and(bitVec).array;
     return this;
   }
 
+  /**
+   * `bitVec.notEqual(bitVec)`
+   * Performs the bitwise not operation between two BitVectors and assigns the result to
+   * this BitVector.
+   *
+   * @return {BitVector} Returns `BitVector` for chaining with the bits set.
+   */
   notEqual() {
     this.array = this.not().array;
     return this;
   }
 
+  /**
+   * `bitVec.isEmpty()`
+   * Tests whether this BitVector has any set bits.
+   *
+   * @return {Boolean} Returns Boolean `true` if the bit vector has no set bits, `false` otherwise.
+   */
   isEmpty() {
     for (let i = 0; i < this.array.length; i += 1) {
       if (this.array[i] !== 0) {
