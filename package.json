@@ -1,6 +1,6 @@
 {
   "name": "bit-vec",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Lightweight BitArray implementation written in javascript.",
   "keywords": [
     "bit",
@@ -47,6 +47,9 @@
   "files": [
     "LICENSE",
     "README.md",
+    "CHANGELOG.md",
+    ".eslintrc",
+    ".gitignore",
     "src/*.js"
   ]
 }
